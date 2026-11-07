@@ -9,6 +9,14 @@
 #include <limits>
 #include <string>
 
+// Reproduce the macro supplied by Linux system time headers on every host.
+#ifdef ADJ_FREQUENCY
+#undef ADJ_FREQUENCY
+#endif
+#define ADJ_FREQUENCY 0x0002
+#include "sys/timex.h"
+static_assert(ADJ_FREQUENCY == 1, "The host stub must replace the system macro.");
+
 namespace {
 using namespace follower;
 namespace config = follower::settings;

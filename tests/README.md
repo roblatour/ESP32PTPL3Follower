@@ -24,7 +24,9 @@ executables are built in automatically removed temporary directories.
 * Real clock owner with deterministic SDK/clock/mutex stubs, for both target
   settings branches: startup, lock/loss, stale metadata, generation barriers,
   learned frequency, failed hardware operations, bridge-read preemption and
-  read-only snapshots.
+  read-only snapshots. A compile-time regression check supplies Linux's
+  `ADJ_FREQUENCY` macro on every host and verifies that the clock stub safely
+  replaces it with its own constant.
 * TAI/UTC/local conversions and DST ambiguity handling. Windows CRT does not
   implement full POSIX TZ rule syntax; the runner explicitly reports that
   limitation. Linux CI additionally runs full explicit DST-rule tests.
