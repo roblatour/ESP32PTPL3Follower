@@ -1,0 +1,2 @@
+#pragma once
+#define SOC_EMAC_IEEE1588V2_SUPPORTED 1

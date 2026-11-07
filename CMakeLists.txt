@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.22)
+include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+
+if(NOT IDF_TARGET STREQUAL "esp32p4" AND NOT IDF_TARGET STREQUAL "esp32s31")
+    message(FATAL_ERROR "ESP32PTPL3Follower supports only esp32p4 and esp32s31")
+endif()
+if(IDF_TARGET STREQUAL "esp32s31")
+    set(COMPONENTS main)
+endif()
+
+idf_build_set_property(MINIMAL_BUILD ON)
+project(ESP32PTPL3Follower VERSION 1.0.0)
+set(FOLLOWER_IDF_VERSION "${IDF_VERSION_MAJOR}.${IDF_VERSION_MINOR}.${IDF_VERSION_PATCH}")
+if(FOLLOWER_IDF_VERSION VERSION_LESS "6.1.0" OR NOT FOLLOWER_IDF_VERSION VERSION_LESS "6.2.0")
+    message(FATAL_ERROR "ESP32PTPL3Follower requires ESP-IDF >= 6.1.0 and < 6.2.0")
+endif()

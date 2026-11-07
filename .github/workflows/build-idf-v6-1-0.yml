@@ -1,0 +1,41 @@
+name: Build ESP32PTPL3Follower (ESP-IDF v6.1)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  host-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Portable core, UDP and clock-owner tests
+        run: |
+          python3 tests/run_tests.py
+          python3 tests/run_clock_tests.py
+
+  firmware:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        board:
+          - { profile: pre_v3, target: esp32p4 }
+          - { profile: v3_0, target: esp32p4 }
+          - { profile: v3_1, target: esp32p4 }
+          - { profile: s31, target: esp32s31 }
+        ipv6: [0, 1]
+    steps:
+      - uses: actions/checkout@v6
+      - name: Compile firmware
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v6.1
+          target: ${{ matrix.board.target }}
+          command: python tools/build.py --profile ${{ matrix.board.profile }} --define FOLLOWER_PTP_IPV6=${{ matrix.ipv6 }}
